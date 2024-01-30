@@ -14,7 +14,7 @@ if __name__ == "__main__":
         source="https://github.com/kevingrismore/sleepy-flow.git",
         entrypoint="sleepy.py:sleepy",
     ).deploy(
-        name="azure-simple",
+        name="azure-sleepy",
         image="prefecthq/prefect:2-latest",
         work_pool_name="azure-kubernetes",
         build=False,
