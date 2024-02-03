@@ -4,9 +4,10 @@ from prefect import flow
 
 
 @flow(log_prints=True)
-def sleepy(seconds: int = 60):
-    print(f"sleeing for {seconds}")
-    time.sleep(seconds)
+def sleepy(seconds: int = 60, times: int = 1):
+    for i in range(times):
+        print(f"sleeping for {seconds}")
+        time.sleep(seconds)
 
 
 if __name__ == "__main__":
@@ -17,5 +18,15 @@ if __name__ == "__main__":
         name="azure-sleepy",
         image="prefecthq/prefect:2-latest",
         work_pool_name="azure-kubernetes",
+        build=False,
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="azure-sleepy-2",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="azure-kubernetes-default",
         build=False,
     )
