@@ -5,6 +5,8 @@ from prefect import flow, task
 
 @flow(log_prints=True)
 def sleepy(seconds: int = 60, times: int = 1):
+    if times == 3:
+        raise ValueError("I don't like 3")
     for i in range(times):
         sleepy_task(seconds=seconds)
 
@@ -20,9 +22,9 @@ if __name__ == "__main__":
         source="https://github.com/kevingrismore/sleepy-flow.git",
         entrypoint="sleepy.py:sleepy",
     ).deploy(
-        name="azure-sleepy",
+        name="cloud-run-v2-sleepy",
         image="prefecthq/prefect:2-latest",
-        work_pool_name="azure-kubernetes",
+        work_pool_name="cloud-run-v2-pool",
         build=False,
     )
 
