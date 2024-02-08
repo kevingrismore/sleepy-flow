@@ -1,4 +1,4 @@
-from prefect import flow, get_client
+from prefect import flow, task, get_client
 from prefect.runtime import deployment
 from prefect.states import Cancelled
 
