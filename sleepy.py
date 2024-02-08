@@ -1,6 +1,6 @@
 import time
 
-from prefect import flow, task
+from prefect import flow, task, deploy
 
 
 @flow(log_prints=True)
@@ -22,9 +22,9 @@ if __name__ == "__main__":
         source="https://github.com/kevingrismore/sleepy-flow.git",
         entrypoint="sleepy.py:sleepy",
     ).deploy(
-        name="cloud-run-v2-sleepy",
+        name="aci-sleepy",
         image="prefecthq/prefect:2-latest",
-        work_pool_name="cloud-run-v2-pool",
+        work_pool_name="aci-test",
         build=False,
     )
 
