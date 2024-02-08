@@ -7,6 +7,7 @@ from prefect.client.schemas.filters import (
     FlowRunFilterState,
     FlowRunFilterStateType,
 )
+from prefect.client.schemas.objects import StateType
 from prefect.states import Cancelled
 
 
@@ -23,15 +24,19 @@ def skip_example():
 async def deployment_already_runing() -> bool:
     deployment_id = deployment.get_id()
     print(deployment_id)
-    client = get_client()
-    running_flows = await client.read_flow_runs(
-        deployment_filter=DeploymentFilter(id=DeploymentFilterId(ids=[deployment_id])),
-        flow_run_filter=FlowRunFilter(
-            state=FlowRunFilterState(
-                type=FlowRunFilterStateType(states=["RUNNING", "PENDING", "PAUSED"])
-            )
-        ),
-    )
+    async with get_client() as client:
+        running_flows = await client.read_flow_runs(
+            deployment_filter=DeploymentFilter(
+                id=DeploymentFilterId(any_=["afb48780-0969-4e77-9561-f201106d7430"])
+            ),
+            flow_run_filter=FlowRunFilter(
+                state=FlowRunFilterState(
+                    type=FlowRunFilterStateType(
+                        any_=[StateType.RUNNING, StateType.PENDING, StateType.PAUSED]
+                    )
+                )
+            ),
+        )
     print(len(running_flows))
     if len(running_flows) > 1:
         print("Another flow is running, skipping")
@@ -42,15 +47,30 @@ async def deployment_already_runing() -> bool:
         return False
 
 
-if __name__ == "__main__":
-    skip_example()
+async def get_flow_runs():
+    async with get_client() as client:
+        running_flows = await client.read_flow_runs(
+            deployment_filter=DeploymentFilter(
+                id=DeploymentFilterId(any_=["afb48780-0969-4e77-9561-f201106d7430"])
+            ),
+            flow_run_filter=FlowRunFilter(
+                state=FlowRunFilterState(
+                    type=FlowRunFilterStateType(
+                        any_=[StateType.RUNNING, StateType.PENDING, StateType.PAUSED]
+                    )
+                )
+            ),
+        )
+        print(len(running_flows))
 
-    # skip_example.from_source(
-    #     source="https://github.com/kevingrismore/sleepy-flow.git",
-    #     entrypoint="cancel.py:skip_example",
-    # ).deploy(
-    #     name="aci-skip-example",
-    #     image="prefecthq/prefect:2-latest",
-    #     work_pool_name="aci-test",
-    #     build=False,
-    # )
+
+if __name__ == "__main__":
+    skip_example.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="cancel.py:skip_example",
+    ).deploy(
+        name="aci-skip-example",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="aci-test",
+        build=False,
+    )
