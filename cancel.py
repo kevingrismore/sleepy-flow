@@ -47,7 +47,12 @@ async def deployment_already_running() -> bool:
             ),
         )
     if len(running_flows) > 1:
-        print("Another flow is running, skipping")
+        print(
+            "There are multiple runs of this deployment running with the following start times:"
+        )
+        for run in running_flows:
+            print(run.expected_start_time)
+        print("Cancelling this flow run in favor of a run with an earlier start time")
         return True
 
     else:
