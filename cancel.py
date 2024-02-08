@@ -12,10 +12,11 @@ def skip_example():
         pass  # do other stuff
 
 
-def deployment_already_runing() -> bool:
+@task
+async def deployment_already_runing() -> bool:
     deployment_id = deployment.get_id()
     client = get_client()
-    running_flows = client.read_flow_runs(
+    running_flows = await client.read_flow_runs(
         deployment_filter={
             "id": deployment_id,
             "state": ["RUNNING", "PENDING", "PAUSED"],
