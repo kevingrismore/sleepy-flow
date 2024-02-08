@@ -44,7 +44,7 @@ async def deployment_already_running() -> bool:
                 ),
             ),
         )
-    if running_flows:
+    if len(running_flows) > 1:
         print("Another flow is running, skipping")
         return True
 
