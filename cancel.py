@@ -8,10 +8,10 @@ from prefect.client.schemas.filters import (
     DeploymentFilterId,
     FlowRunFilterState,
     FlowRunFilterStateType,
-    FlowRunFilterStartTime,
+    FlowRunFilterExpectedStartTime,
 )
 from prefect.client.schemas.objects import StateType
-from prefect.runtime import deployment, flow_run
+from prefect.runtime import deployment
 from prefect.states import Cancelled
 
 
@@ -29,6 +29,8 @@ async def deployment_already_running() -> bool:
     run_context = get_run_context()
     deployment_id = deployment.get_id()
     async with get_client() as client:
+        # find any running, pending, or paused flows for this deployment that started
+        # at or before the current flow run's start time
         running_flows = await client.read_flow_runs(
             deployment_filter=DeploymentFilter(
                 id=DeploymentFilterId(any_=[deployment_id])
@@ -39,7 +41,7 @@ async def deployment_already_running() -> bool:
                         any_=[StateType.RUNNING, StateType.PENDING, StateType.PAUSED]
                     )
                 ),
-                start_time=FlowRunFilterStartTime(
+                start_time=FlowRunFilterExpectedStartTime(
                     before_=run_context.start_time,
                 ),
             ),
