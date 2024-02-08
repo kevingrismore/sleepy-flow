@@ -3,13 +3,14 @@ from prefect.runtime import deployment
 from prefect.client.schemas.filters import (
     FlowRunFilter,
     DeploymentFilter,
+    DeploymentFilterId,
     FlowRunFilterState,
     FlowRunFilterStateType,
 )
 from prefect.states import Cancelled
 
 
-@flow
+@flow(log_prints=True)
 def skip_example():
     if deployment_already_runing():
         return Cancelled()
@@ -24,7 +25,7 @@ async def deployment_already_runing() -> bool:
     print(deployment_id)
     client = get_client()
     running_flows = await client.read_flow_runs(
-        deployment_filter=DeploymentFilter(id=deployment_id),
+        deployment_filter=DeploymentFilter(id=DeploymentFilterId(ids=[deployment_id])),
         flow_run_filter=FlowRunFilter(
             state=FlowRunFilterState(
                 type=FlowRunFilterStateType(states=["RUNNING", "PENDING", "PAUSED"])
