@@ -1,15 +1,17 @@
 import time
 
 from prefect import flow, task, get_client
+from prefect.context import get_run_context
 from prefect.client.schemas.filters import (
     FlowRunFilter,
     DeploymentFilter,
     DeploymentFilterId,
     FlowRunFilterState,
     FlowRunFilterStateType,
+    FlowRunFilterStartTime,
 )
 from prefect.client.schemas.objects import StateType
-from prefect.runtime import deployment
+from prefect.runtime import deployment, flow_run
 from prefect.states import Cancelled
 
 
@@ -24,6 +26,7 @@ def skip_example():
 
 @task
 async def deployment_already_running() -> bool:
+    run_context = get_run_context()
     deployment_id = deployment.get_id()
     async with get_client() as client:
         running_flows = await client.read_flow_runs(
@@ -35,7 +38,10 @@ async def deployment_already_running() -> bool:
                     type=FlowRunFilterStateType(
                         any_=[StateType.RUNNING, StateType.PENDING, StateType.PAUSED]
                     )
-                )
+                ),
+                start_time=FlowRunFilterStartTime(
+                    before_=run_context.start_time,
+                ),
             ),
         )
     if len(running_flows) > 1:
