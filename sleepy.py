@@ -1,10 +1,13 @@
 import time
+import os
 
 from prefect import flow, task, deploy
 
 
 @flow(log_prints=True)
-def sleepy(seconds: int = 60, times: int = 1):
+def sleepy(seconds: int = 60, times: int = 1, use_env_vars: bool = False):
+    if use_env_vars:
+        print(os.getenv("THING1"))
     if times == 3:
         raise ValueError("I don't like 3")
     for i in range(times):
