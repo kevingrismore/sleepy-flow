@@ -31,9 +31,7 @@ deployments:
       work_queue_name: null
       job_variables:
         env:
-          - name: THING1
-            value: "true"
-          - name: THING2
-            value: "DEBUG"
+          THING1: "true"
+          THING2: "DEBUG"
     schedule: null
     is_schedule_active: true

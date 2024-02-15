@@ -14,7 +14,8 @@ from prefect.states import Cancelled
 
 
 @flow(log_prints=True)
-def skip_example():
+def skip_example(name:str):
+    print(name)
     if deployment_already_running():
         return Cancelled()
 
