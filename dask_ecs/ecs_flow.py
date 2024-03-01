@@ -2,7 +2,7 @@ from prefect import flow, task
 from prefect_dask import DaskTaskRunner
 from prefect.deployments import DeploymentImage
 
-from dask_ecs.util import do_something_useful
+from util import do_something_useful
 
 
 @task
