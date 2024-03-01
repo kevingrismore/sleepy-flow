@@ -1,13 +1,18 @@
-from prefect import flow, deploy
+from prefect import flow, task
 from prefect_dask import DaskTaskRunner
 from prefect.deployments import DeploymentImage
 
 from util import do_something_useful
 
 
+@task
+def do_something():
+    do_something_useful()
+
+
 @flow(log_prints=True, task_runner=DaskTaskRunner)
 def ecs_flow():
-    do_something_useful()
+    do_something.submit()
 
 
 if __name__ == "__main__":
