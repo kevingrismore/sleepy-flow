@@ -2,7 +2,7 @@ from prefect import flow, task
 from prefect_dask import DaskTaskRunner
 from prefect.deployments import DeploymentImage
 
-from util import do_something_useful
+from dask_ecs.util import do_something_useful
 
 
 @task
@@ -18,7 +18,7 @@ def ecs_flow():
 if __name__ == "__main__":
     ecs_flow.from_source(
         source="https://github.com/kevingrismore/sleepy-flow.git",
-        entrypoint="ecs_flow.py:ecs_flow",
+        entrypoint="dask_ecs/ecs_flow.py:ecs_flow",
     ).deploy(
         name="ecs-flow",
         work_pool_name="my-ecs-pool",
