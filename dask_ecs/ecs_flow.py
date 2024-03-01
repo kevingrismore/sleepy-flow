@@ -6,13 +6,14 @@ from util import do_something_useful
 
 
 @task
-def do_something():
+def do_something(number: int):
+    print(number)
     do_something_useful()
 
 
 @flow(log_prints=True, task_runner=DaskTaskRunner)
 def ecs_flow():
-    do_something.submit()
+    do_something.map([1, 2, 3])
 
 
 if __name__ == "__main__":
