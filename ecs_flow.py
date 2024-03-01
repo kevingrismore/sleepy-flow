@@ -1,5 +1,6 @@
-from prefect import flow
+from prefect import flow, deploy
 from prefect_dask import DaskTaskRunner
+from prefect.deployments import DeploymentImage
 
 from util import do_something_useful
 
@@ -15,5 +16,10 @@ if __name__ == "__main__":
         entrypoint="ecs_flow.py:ecs_flow",
     ).deploy(
         name="ecs-flow",
-        image="kevingrismoreprefect/prefect-with-dask:1",
+        work_pool_name="my-ecs-pool",
+        image=DeploymentImage(
+            name="kevingrismoreprefect/prefect-with-dask",
+            tag="2",
+            platform="linux/amd64",
+        ),
     )
