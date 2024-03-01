@@ -25,10 +25,72 @@ if __name__ == "__main__":
         source="https://github.com/kevingrismore/sleepy-flow.git",
         entrypoint="sleepy.py:sleepy",
     ).deploy(
-        name="aci-sleepy",
+        name="local-sleepy-1",
         image="prefecthq/prefect:2-latest",
-        work_pool_name="aci-test",
+        work_pool_name="k8s-local-2",
         build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="local-sleepy-2",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="k8s-local-2",
+        build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="local-sleepy-3",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="k8s-local-2",
+        build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="local-sleepy-4",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="k8s-local-2",
+        build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="local-sleepy-5",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="k8s-local-2",
+        build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
+    )
+
+    sleepy.from_source(
+        source="https://github.com/kevingrismore/sleepy-flow.git",
+        entrypoint="sleepy.py:sleepy",
+    ).deploy(
+        name="local-sleepy-6",
+        image="prefecthq/prefect:2-latest",
+        work_pool_name="k8s-local-2",
+        build=False,
+        cron="* * * * *",
+        parameters={"seconds": 3},
     )
 
     # sleepy.from_source(

@@ -12,10 +12,8 @@ from prefect.client.schemas.objects import StateType
 from prefect.runtime import deployment
 from prefect.states import Cancelled
 
-
 @flow(log_prints=True)
 def skip_example(name:str):
-    print(name)
     if deployment_already_running():
         return Cancelled()
 
@@ -46,12 +44,14 @@ async def deployment_already_running() -> bool:
 
 
 if __name__ == "__main__":
-    skip_example.from_source(
-        source="https://github.com/kevingrismore/sleepy-flow.git",
-        entrypoint="cancel.py:skip_example",
-    ).deploy(
-        name="aci-skip-example",
-        image="prefecthq/prefect:2-latest",
-        work_pool_name="aci-test",
-        build=False,
-    )
+    # skip_example.from_source(
+    #     source="https://github.com/kevingrismore/sleepy-flow.git",
+    #     entrypoint="cancel.py:skip_example",
+    # ).deploy(
+    #     name="aci-skip-example",
+    #     image="prefecthq/prefect:2-latest",
+    #     work_pool_name="aci-test",
+    #     build=False,
+    # )
+    # skip_example(name="new\nline")
+    skip_example.serve(name="newline")
